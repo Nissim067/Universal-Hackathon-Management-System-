@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Zap, Github, Twitter } from 'lucide-react';
+import { Zap, Globe, ExternalLink } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -67,7 +67,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-lg bg-surface-elevated border border-border flex items-center justify-center text-text-muted hover:text-accent hover:border-accent/30 transition-all"
               >
-                <Github size={16} />
+                <Globe size={16} />
               </a>
               <a
                 href="https://twitter.com"
@@ -75,7 +75,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="w-9 h-9 rounded-lg bg-surface-elevated border border-border flex items-center justify-center text-text-muted hover:text-accent hover:border-accent/30 transition-all"
               >
-                <Twitter size={16} />
+                <ExternalLink size={16} />
               </a>
             </div>
           </div>

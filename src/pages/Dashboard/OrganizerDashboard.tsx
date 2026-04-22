@@ -1,5 +1,5 @@
 import { useAuthStore } from '../../store/authStore';
-import { OrganizerStats, ManageHackathons } from '../../components/dashboard/OrganizerPanels';
+import { OrganizerStats, ManageHackathons, SubmissionsReview, PaymentsOverview } from '../../components/dashboard/OrganizerPanels';
 import { Zap } from 'lucide-react';
 
 export default function OrganizerDashboard() {
@@ -20,13 +20,21 @@ export default function OrganizerDashboard() {
         </div>
       </div>
 
-      {/* Stats */}
+      {/* Panel 1: Stats */}
       <div className="mb-8">
         <OrganizerStats />
       </div>
 
-      {/* Hackathon management */}
-      <ManageHackathons />
+      {/* Panel 2: Manage Hackathons */}
+      <div className="mb-8">
+        <ManageHackathons />
+      </div>
+
+      {/* Panels 3 & 4: Submissions + Payments side-by-side */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <SubmissionsReview />
+        <PaymentsOverview />
+      </div>
     </div>
   );
 }

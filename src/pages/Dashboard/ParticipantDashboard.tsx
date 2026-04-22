@@ -1,5 +1,5 @@
 import { useAuthStore } from '../../store/authStore';
-import { RegisteredHackathons, DashboardQuickActions } from '../../components/dashboard/ParticipantPanels';
+import { RegisteredHackathons, MyTeams, MySubmissions, PaymentHistory } from '../../components/dashboard/ParticipantPanels';
 import { Sparkles } from 'lucide-react';
 
 export default function ParticipantDashboard() {
@@ -20,17 +20,19 @@ export default function ParticipantDashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main — registered hackathons */}
-        <div className="lg:col-span-2">
-          <RegisteredHackathons />
-        </div>
-
-        {/* Sidebar — quick actions */}
-        <div>
-          <DashboardQuickActions />
-        </div>
+      {/* Panel 1: Registered Hackathons (full-width) */}
+      <div className="mb-6">
+        <RegisteredHackathons />
       </div>
+
+      {/* Panel 2 & 3: Teams + Submissions side-by-side */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <MyTeams />
+        <MySubmissions />
+      </div>
+
+      {/* Panel 4: Payment History */}
+      <PaymentHistory />
     </div>
   );
 }

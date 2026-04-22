@@ -1,17 +1,5 @@
 import axiosClient from './axiosClient';
-import type { User } from '../types';
-
-export interface RegisterPayload {
-  name: string;
-  email: string;
-  password: string;
-  role: 'organizer' | 'participant';
-}
-
-export interface LoginPayload {
-  email: string;
-  password: string;
-}
+import type { User, RegisterPayload, LoginPayload } from '../types';
 
 /** POST /auth/register */
 export async function registerUser(payload: RegisterPayload): Promise<User> {

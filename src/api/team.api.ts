@@ -1,18 +1,5 @@
 import axiosClient from './axiosClient';
-import type { Team } from '../types';
-
-export interface CreateTeamPayload {
-  name: string;
-  hackathonId: string;
-}
-
-export interface InviteMemberPayload {
-  email: string;
-}
-
-export interface JoinTeamPayload {
-  token: string;
-}
+import type { Team, CreateTeamPayload, InviteMemberPayload, JoinTeamPayload } from '../types';
 
 /** POST /teams — create team */
 export async function createTeam(payload: CreateTeamPayload): Promise<Team> {

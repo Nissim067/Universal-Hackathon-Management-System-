@@ -1,29 +1,5 @@
 import axiosClient from './axiosClient';
-import type { Hackathon } from '../types';
-
-export interface HackathonFilters {
-  status?: 'upcoming' | 'ongoing' | 'completed';
-  page?: number;
-  limit?: number;
-}
-
-export interface HackathonListResponse {
-  hackathons: Hackathon[];
-  total: number;
-  page: number;
-  totalPages: number;
-}
-
-export interface CreateHackathonPayload {
-  title: string;
-  description: string;
-  coverImage?: string;
-  startDate: string;
-  endDate: string;
-  prizePool: number;
-  tags: string[];
-  registrationFee: number;
-}
+import type { Hackathon, HackathonFilters, HackathonListResponse, CreateHackathonPayload } from '../types';
 
 /** GET /hackathons — list all with optional filters */
 export async function getHackathons(filters?: HackathonFilters): Promise<HackathonListResponse> {

@@ -1,12 +1,5 @@
 import axiosClient from './axiosClient';
-import type { PaymentIntentResponse } from '../types';
-
-export interface PaymentStatus {
-  paid: boolean;
-  amount: number;
-  currency: string;
-  paidAt?: string;
-}
+import type { PaymentIntentResponse, PaymentStatus } from '../types';
 
 /** POST /payments/create-intent — create a Stripe PaymentIntent */
 export async function createPaymentIntent(hackathonId: string): Promise<PaymentIntentResponse> {

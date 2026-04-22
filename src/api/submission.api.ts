@@ -1,14 +1,5 @@
 import axiosClient from './axiosClient';
-import type { Submission } from '../types';
-
-export interface CreateSubmissionPayload {
-  hackathonId: string;
-  teamId: string;
-  title: string;
-  description: string;
-  projectUrl?: string;
-  demoVideoUrl?: string;
-}
+import type { Submission, CreateSubmissionPayload } from '../types';
 
 /** POST /submissions — submit project */
 export async function createSubmission(payload: CreateSubmissionPayload): Promise<Submission> {

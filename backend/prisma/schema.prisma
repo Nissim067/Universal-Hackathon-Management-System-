@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  passwordHash  String
+  name          String
+  role          UserRole       @default(PARTICIPANT)
+  createdAt     DateTime       @default(now())
+  hackathons    Hackathon[]    @relation("OrganizerHackathons")
+  registrations Registration[]
+  teams         TeamMember[]
+  submissions   Submission[]
+  payments      Payment[]
+}
+
+enum UserRole {
+  PARTICIPANT
+  ORGANIZER
+  ADMIN
+}
+
+model Hackathon {
+  id                   String          @id @default(cuid())
+  title                String
+  description          String
+  coverImageUrl        String?
+  startDate            DateTime
+  endDate              DateTime
+  registrationDeadline DateTime
+  prizePool            Float?
+  registrationFee      Float           @default(0) // 0 = free
+  maxParticipants      Int?
+  status               HackathonStatus @default(DRAFT)
+  tags                 String[]
+  organizerId          String
+  organizer            User            @relation("OrganizerHackathons", fields: [organizerId], references: [id])
+  registrations        Registration[]
+  teams                Team[]
+  submissions          Submission[]
+  payments             Payment[]
+  createdAt            DateTime        @default(now())
+}
+
+enum HackathonStatus {
+  DRAFT
+  UPCOMING
+  ACTIVE
+  JUDGING
+  COMPLETED
+  CANCELLED
+}
+
+model Registration {
+  id           String    @id @default(cuid())
+  userId       String
+  hackathonId  String
+  user         User      @relation(fields: [userId], references: [id])
+  hackathon    Hackathon @relation(fields: [hackathonId], references: [id])
+  registeredAt DateTime  @default(now())
+
+  @@unique([userId, hackathonId])
+}
+
+model Team {
+  id          String       @id @default(cuid())
+  name        String
+  hackathonId String
+  hackathon   Hackathon    @relation(fields: [hackathonId], references: [id])
+  members     TeamMember[]
+  submission  Submission?
+  inviteToken String       @unique @default(cuid())
+  createdAt   DateTime     @default(now())
+}
+
+model TeamMember {
+  id     String   @id @default(cuid())
+  userId String
+  teamId String
+  role   TeamRole @default(MEMBER)
+  user   User     @relation(fields: [userId], references: [id])
+  team   Team     @relation(fields: [teamId], references: [id])
+
+  @@unique([userId, teamId])
+}
+
+enum TeamRole {
+  LEADER
+  MEMBER
+}
+
+model Submission {
+  id           String    @id @default(cuid())
+  hackathonId  String
+  teamId       String    @unique
+  userId       String
+  projectTitle String
+  description  String
+  repoUrl      String?
+  demoUrl      String?
+  submittedAt  DateTime  @default(now())
+  hackathon    Hackathon @relation(fields: [hackathonId], references: [id])
+  team         Team      @relation(fields: [teamId], references: [id])
+  user         User      @relation(fields: [userId], references: [id])
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  userId          String
+  hackathonId     String
+  stripePaymentId String        @unique // Stripe PaymentIntent ID
+  amount          Float
+  currency        String        @default("inr")
+  status          PaymentStatus @default(PENDING)
+  createdAt       DateTime      @default(now())
+  user            User          @relation(fields: [userId], references: [id])
+  hackathon       Hackathon     @relation(fields: [hackathonId], references: [id])
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}

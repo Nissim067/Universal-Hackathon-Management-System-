@@ -1,0 +1,59 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.SubmissionService = void 0;
+const db_1 = require("../../config/db");
+const ApiError_1 = require("../../utils/ApiError");
+class SubmissionService {
+    async createSubmission(data, userId) {
+        // Verify hackathon exists and is active/upcoming
+        const hackathon = await db_1.db.hackathon.findUnique({
+            where: { id: data.hackathonId },
+        });
+        if (!hackathon) {
+            throw new ApiError_1.ApiError(404, 'Hackathon not found', 'HACKATHON_NOT_FOUND');
+        }
+        // Verify team exists and user is part of it
+        const team = await db_1.db.team.findUnique({
+            where: { id: data.teamId },
+            include: { members: true },
+        });
+        if (!team || team.hackathonId !== data.hackathonId) {
+            throw new ApiError_1.ApiError(404, 'Team not found in this hackathon', 'TEAM_NOT_FOUND');
+        }
+        const isMember = team.members.some((m) => m.userId === userId);
+        if (!isMember) {
+            throw new ApiError_1.ApiError(403, 'You must be a member of the team to submit', 'FORBIDDEN');
+        }
+        // Check if team already submitted
+        const existingSubmission = await db_1.db.submission.findUnique({
+            where: { teamId: data.teamId },
+        });
+        if (existingSubmission) {
+            throw new ApiError_1.ApiError(409, 'Team has already submitted a project', 'DUPLICATE_SUBMISSION');
+        }
+        // Create submission
+        const submission = await db_1.db.submission.create({
+            data: {
+                ...data,
+                userId,
+            },
+        });
+        return submission;
+    }
+    async getSubmissionsByHackathonId(hackathonId) {
+        const submissions = await db_1.db.submission.findMany({
+            where: { hackathonId },
+            include: {
+                team: {
+                    select: { id: true, name: true },
+                },
+                user: {
+                    select: { id: true, name: true },
+                },
+            },
+            orderBy: { submittedAt: 'desc' },
+        });
+        return submissions;
+    }
+}
+exports.SubmissionService = SubmissionService;

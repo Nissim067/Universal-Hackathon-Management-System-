@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const submission_controller_1 = require("./submission.controller");
+const validate_middleware_1 = require("../../middleware/validate.middleware");
+const auth_middleware_1 = require("../../middleware/auth.middleware");
+const submission_schema_1 = require("./submission.schema");
+const router = (0, express_1.Router)();
+const submissionController = new submission_controller_1.SubmissionController();
+router.post('/', auth_middleware_1.verifyToken, (0, validate_middleware_1.validate)(submission_schema_1.createSubmissionSchema), submissionController.createSubmission);
+router.get('/:hackathonId', auth_middleware_1.verifyToken, submissionController.getSubmissions);
+exports.default = router;
